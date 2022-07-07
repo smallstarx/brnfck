@@ -7,7 +7,7 @@
 Hello World Program: ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.+++.
 */
 
-std::string solve(std::string input)
+std::string Solve(std::string input)
 {
     const int cellsize = 1000;
     long cell[cellsize] = {0};
@@ -49,20 +49,34 @@ std::string solve(std::string input)
     return output;
 }
 
+void PrintHelp()
+{
+    std::cout << "Brainfuck Interpreter:\nbrnfck <string>\nbrnfck -f <file>\nbrnfck -h" << std::endl;
+}
+
 int main(int argc, char** argv)
 {
-    if(argc < 2) return 0;
+    if(argc < 2)
+    {
+        PrintHelp();
+        return 0;
+    }
+    if(!strcmp(argv[1], "-h"))
+    {
+        PrintHelp();
+        return 0;
+    }
     if(!strcmp(argv[1], "-f") && argc > 2)
     {
         std::ifstream file(argv[2]);
         std::stringstream buffer;
         buffer << file.rdbuf();
-        std::cout << solve(buffer.str()) << std::endl;
+        std::cout << Solve(buffer.str()) << std::endl;
         file.close();
     }
     else
     {
-        std::cout << solve(argv[1]) << std::endl;
+        std::cout << Solve(argv[1]) << std::endl;
     }
     return 0;
 }
