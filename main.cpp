@@ -2,6 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <cstring>
+#include <exception>
 
 /*
 Hello World Program: ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.+++.
@@ -9,7 +10,7 @@ Hello World Program: ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+
 
 std::string Solve(std::string input)
 {
-    const int cellsize = 1000;
+    const int cellsize = 10000;
     long cell[cellsize] = {0};
     int ptr = cellsize / 2;
     const char* program = input.c_str();
@@ -37,11 +38,27 @@ std::string Solve(std::string input)
             output += (char)cell[ptr];
             break;
         case '[':
-            if(!cell[ptr]) while(program[++i] != ']') {}
+        {
+            int j = 1;
+            if(!cell[ptr]) while(j)
+            {
+                char c = program[++i];
+                if(c == '[') j++;
+                else if(c == ']') j--;
+            }
             break;
+        }
         case ']':
-            if(cell[ptr]) while(program[--i] != '[') {}
+        {
+            int j = 1;
+            if(cell[ptr]) while(j)
+            {
+                char c = program[--i];
+                if(c == ']') j++;
+                else if(c == '[') j--;
+            }
             break;
+        }
         default:
             break;
         }
@@ -68,11 +85,22 @@ int main(int argc, char** argv)
     }
     if(!strcmp(argv[1], "-f") && argc > 2)
     {
+        try{
         std::ifstream file(argv[2]);
+        if(!file.is_open())
+        {
+            std::cout << "file not found!" << std::endl;
+            return 0;
+        }
         std::stringstream buffer;
         buffer << file.rdbuf();
         std::cout << Solve(buffer.str()) << std::endl;
         file.close();
+        }
+        catch(std::exception& e)
+        {
+            std::cout << e.what() << std::endl;
+        }
     }
     else
     {
