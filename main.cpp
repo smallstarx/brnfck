@@ -1,18 +1,27 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <cstring>
 #include <exception>
+#include "CellArray.hpp"
+
 
 /*
 Hello World Program: ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.+++.
 */
 
+void PrintCellArray(CellArray& c)
+{
+    for (int i = 0; i < c.size; i++)
+    {
+        std::cout << c.array[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
 std::string Solve(std::string input)
 {
-    const int cellsize = 10000;
-    long cell[cellsize] = {0};
-    int ptr = cellsize / 2;
+    CellArray cell(4);
+
     const char* program = input.c_str();
     long program_size = input.length();
 
@@ -23,24 +32,24 @@ std::string Solve(std::string input)
         switch (program[i])
         {
         case '>':
-            ptr++;
+            cell.PtrUp();
             break;
         case '<':
-            ptr--;
+            cell.PtrDown();
             break;
         case '+':
-            cell[ptr]++;
+            cell.CellUp();
             break;
         case '-':
-            cell[ptr]--;
+            cell.CellDown();
             break;
         case '.':
-            output += (char)cell[ptr];
+            output += cell.GetChar();
             break;
         case '[':
         {
             int j = 1;
-            if(!cell[ptr]) while(j)
+            if(!cell.GetLong()) while(j)
             {
                 char c = program[++i];
                 if(c == '[') j++;
@@ -51,7 +60,7 @@ std::string Solve(std::string input)
         case ']':
         {
             int j = 1;
-            if(cell[ptr]) while(j)
+            if(cell.GetLong()) while(j)
             {
                 char c = program[--i];
                 if(c == ']') j++;
