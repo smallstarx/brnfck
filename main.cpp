@@ -20,7 +20,7 @@ void PrintCellArray(CellArray& c)
 
 std::string Solve(std::string input)
 {
-    CellArray cell(4);
+    CellArray cell(1024);
 
     const char* program = input.c_str();
     long program_size = input.length();
